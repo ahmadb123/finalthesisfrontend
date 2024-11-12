@@ -9,6 +9,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import LandingPage from "./pages/landingPage";
 import Account from "./pages/Account";
+import EditAccount from "./pages/EditAccount";
 
 function AppRoutes() {
     return (
@@ -19,6 +20,7 @@ function AppRoutes() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/editAccount" element={<EditAccount />} />
           {/* Add more routes as needed */}
         </Routes>
       </Router>
