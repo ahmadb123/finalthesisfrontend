@@ -1,0 +1,104 @@
+/* Center the login container */
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+}
+
+/* Main header style */
+.login-container h2 {
+    color: #111;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Input fields */
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Focus style for input fields */
+.login-container input[type="text"]:focus,
+.login-container input[type="password"]:focus {
+    border-color: #ffa41c;
+    outline: none;
+    box-shadow: 0 0 3px rgba(255, 164, 28, 0.5);
+}
+
+/* Button styling */
+.login-container button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #ffa41c;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.login-container button:hover {
+    background-color: #ff8c00;
+}
+
+/* Link styling */
+.login-container a {
+    display: block;
+    color: #0066c0;
+    font-size: 14px;
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+
+/* Privacy text and other small details */
+.login-container .privacy-text {
+    font-size: 12px;
+    color: #555;
+    margin-top: 10px;
+}
+
+.login-container .privacy-text a {
+    color: #0066c0;
+    text-decoration: none;
+}
+
+.login-container .privacy-text a:hover {
+    text-decoration: underline;
+}
+
+/* Additional footer styling for register link */
+.login-container .register-footer {
+    border-top: 1px solid #ddd;
+    margin-top: 20px;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.login-container .register-footer a {
+    color: #0066c0;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-container .register-footer a:hover {
+    text-decoration: underline;
+}
