@@ -30,8 +30,15 @@ function LoginPage() {
                 body: JSON.stringify({ username, password }),
             });
             if(response.ok) {
-                const data = await response.text();
-                navigate('/HomePage');
+                const data = await response.json();
+                const token = data.token;
+                if(token){
+                    localStorage.setItem('jwtToken', token);  
+                    toast.success('Login successful');
+                    navigate('/HomePage');  
+                }else{
+                    toast.error('Token not found');
+                }
             } else if(response.status === 401) {
                 toast.error('Incorrect Password. Please try again.');
             } else {

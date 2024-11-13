@@ -12,31 +12,51 @@ function EditAddress(){
     const [state, setState] = useState("");
     const [postalCode, setPostalCode] = useState("");
     const [country, setCountry] = useState("");
+
+    // Retrieve the JWT token from localStorage
+    const jwtToken = localStorage.getItem('jwtToken');
+
     const handleEditAddress = async (e) => {
         e.preventDefault();
+
+        const token = localStorage.getItem("jwtToken");
+        if(!token){
+            toast.error("You are not logged in. Please log in to update your address.");
+            navigate("/login");
+            return;
+        }
+
+        const addressData = {
+            streetName,
+            city,
+            state,
+            postalCode,
+            country
+        };
+
         try{
             const response = await fetch(`${apiUrl}/api/auth/update-address`, {
                 method: "POST",
-                headers: {"Content-type": "application/json"},
-                body: JSON.stringify({
-                    streetName,
-                    city,
-                    state,
-                    postalCode,
-                    country
-                }),
+                headers: {
+                    "Content-Type": "application/json", 
+                    'Authorization': 'Bearer ' + jwtToken 
+                },
+                body: JSON.stringify(addressData),
             });
+
             if(response.ok){
                 toast.success("Address updated successfully");
                 navigate("/account");
-            }else{
-                toast.error("Failed to update address");
-                navigate("/account");
+            } else {
+                const errorData = await response.json();
+                toast.error(`Failed to update address: ${errorData.message || response.statusText}`);
             }
-        }catch(e){
+        } catch(error){
+            console.error("Error occurred updating address:", error);
             toast.error("Error occurred updating address");
         }
     };
+
     return(
         <div className="edit-address">
             <h2>Edit Address</h2>
@@ -44,45 +64,46 @@ function EditAddress(){
                 <div className="form-group">
                     <label>Address Line</label>
                     <input 
-                        type ="text"
-                        valye={streetName}
+                        type="text"
+                        value={streetName}
                         onChange={(e) => setStreetName(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
                     <label>City</label>
                     <input 
-                        type ="text"
-                        valye={city}
+                        type="text"
+                        value={city}
                         onChange={(e) => setCity(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
                     <label>State</label>
                     <input 
-                        type ="text"
-                        valye={state}
+                        type="text"
+                        value={state}
                         onChange={(e) => setState(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
                     <label>Postal Code</label>
                     <input 
-                        type ="text"
-                        valye={postalCode}
+                        type="text"
+                        value={postalCode}
                         onChange={(e) => setPostalCode(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
                     <label>Country</label>
                     <input 
-                        type ="text"
-                        valye={country}
+                        type="text"
+                        value={country}
                         onChange={(e) => setCountry(e.target.value)}
                     />
                 </div>
                 <button type="submit">Update Address</button>
             </form>
+            <ToastContainer />
         </div>
     );
 }
