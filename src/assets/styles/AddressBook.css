@@ -1,0 +1,50 @@
+.address-book {
+    padding: 20px;
+    max-width: 400px;
+    margin: auto;
+    text-align: left;
+}
+
+.address-book h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.address-book p {
+    font-size: 1em;
+    margin: 10px 0;
+}
+
+.address-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.address-slot {
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.address-slot p {
+    margin: 0;
+}
+
+.add-new {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #555;
+    text-align: center;
+}
+
+.add-icon {
+    font-size: 1.5em;
+    font-weight: bold;
+}
