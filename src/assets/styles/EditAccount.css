@@ -118,6 +118,7 @@
 
 /* Styles for the Address Box */
 .address-display {
+    
     display: flex;
     flex-direction: column;
     gap: 10px;
