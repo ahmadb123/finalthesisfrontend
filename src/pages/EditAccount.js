@@ -3,9 +3,7 @@ import "../assets/styles/EditAccount.css";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AddressBook from "../components/AddressBook";
 import Breadcrumb from "../components/Breadcrumb";
-
 const apiUrl = 'http://localhost:8080';
 
 function EditAddress(){
@@ -30,27 +28,37 @@ function EditAddress(){
                         'Authorization': 'Bearer ' + jwtToken
                     },
                 });
-                if(response.ok){
+                if (response.ok) {
                     const data = await response.json();
-                    setStreetName(data.streetName);
-                    setCity(data.city);
-                    setState(data.state);
-                    setPostalCode(data.postalCode);
-                    setCountry(data.country);
-                    if(data === null){
-                        return;
+                    if (data && Object.keys(data).length > 0) {
+                        // Address exists
+                        setStreetName(data.streetName || "");
+                        setCity(data.city || "");
+                        setState(data.state || "");
+                        setPostalCode(data.postalCode || "");
+                        setCountry(data.country || "");
+                    } else {
+                        // Address is null or empty
+                        clearAddressFields();
                     }
-                }else{
-                    const errorData = await response.json();
-                    toast.error(`Failed to get address: ${errorData.message || response.statusText}`);
+                } else {
+                    // Handle error responses without showing an error toast
+                    clearAddressFields();
                 }
-            }catch(e){
-                console.error("Error fetching address:", e);
-                toast.error("Error fetching address");
-            }
+            } catch (e) {
+                console.error("Error fetching address data:", e);
+         }
         };
         getCurrentAddress();
-    }, [jwtToken]); // Add jwtToken as a dependency to re-run if it changes
+    }, [jwtToken]);
+
+    const clearAddressFields = () => {
+        setStreetName("");
+        setCity("");
+        setState("");
+        setPostalCode("");
+        setCountry("");
+    };
 
     const deleteAddress = async () =>{
         try{
@@ -63,13 +71,8 @@ function EditAddress(){
             });
             if(response.ok){
                 toast.success("Address deleted successfully");
-                // clear states: 
-                setStreetName("");
-                setCity("");
-                setState("");
-                setPostalCode("");
-                setCountry("");
-                navigate("/edit-account");
+                clearAddressFields();
+                setIsEditing(false);
             }else{
                 const errorData = await response.json();
                 toast.error(`Failed to delete address: ${errorData.message || response.statusText}`);
@@ -79,8 +82,14 @@ function EditAddress(){
             toast.error("Error deleting address");
         }
     };
+
     const handleEditAddress = async (e) => {
         e.preventDefault();
+
+        if(!streetName || !city || !state || !postalCode || !country){
+            toast.error("Please fill in all fields");
+            return null;
+        }
 
         const token = localStorage.getItem("jwtToken");
         if(!token){
@@ -110,7 +119,6 @@ function EditAddress(){
             if(response.ok){
                 toast.success("Address updated successfully");
                 setIsEditing(false);
-                // navigate("/account");
             } else {
                 const errorData = await response.json();
                 toast.error(`Failed to update address: ${errorData.message || response.statusText}`);
@@ -121,72 +129,88 @@ function EditAddress(){
         }
     };
 
+    const addressExists = streetName || city || state || postalCode || country;
+
     return (
         <div className="edit-address">
             <Breadcrumb />
-            <AddressBook deleteAddress={deleteAddress} />
-            <h2>Edit Address</h2>
+            <h2>ADDRESS BOOK</h2>
             {
                 !isEditing ? (
-                    <div className="address-display">
-                        <p>{streetName}</p>
-                        <p>{city}</p>
-                        <p>{state}</p>
-                        <p>{postalCode}</p>
-                        <p>{country}</p>
-                        <div className="actions">
-                            <button onClick={() => setIsEditing(true)}>Edit Address</button>
-                            <button onClick={deleteAddress}>Remove</button>
-                        </div>
-                        <p className="default-label">Default</p>
+                    <div>
+                        {addressExists ? (
+                            <div className="address-display">
+                                <p>{streetName}</p>
+                                <p>{city}</p>
+                                <p>{state}</p>
+                                <p>{postalCode}</p>
+                                <p>{country}</p>
+                                <div className="actions">
+                                    <button onClick={() => setIsEditing(true)}>Edit Address</button>
+                                    <button onClick={deleteAddress}>Remove</button>
+                                </div>
+                                <p className="default-label">Default</p>
+                            </div>
+                        ) : (
+                            <div className="add-new-address" onClick={() => { clearAddressFields(); setIsEditing(true); }}>
+                                <div className="add-icon">+</div>
+                                <span>Add Address</span>
+                            </div>
+                        )}
                     </div>
                 ) : (
-                    <>
-                        <button onClick={() => setIsEditing(false)}>Cancel</button>
-                        <form onSubmit={handleEditAddress}>
-                            <div className="form-group">
-                                <label>Address Line</label>
-                                <input
-                                    type="text"
-                                    value={streetName}
-                                    onChange={(e) => setStreetName(e.target.value)}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>City</label>
-                                <input
-                                    type="text"
-                                    value={city}
-                                    onChange={(e) => setCity(e.target.value)}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>State</label>
-                                <input
-                                    type="text"
-                                    value={state}
-                                    onChange={(e) => setState(e.target.value)}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Postal Code</label>
-                                <input
-                                    type="text"
-                                    value={postalCode}
-                                    onChange={(e) => setPostalCode(e.target.value)}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Country</label>
-                                <input
-                                    type="text"
-                                    value={country}
-                                    onChange={(e) => setCountry(e.target.value)}
-                                />
-                            </div>
-                            <button type="submit">Update Address</button>
-                        </form>
-                    </>
+                    <div className="modal-overlay">
+                        <div className="modal-container">
+                            <button className="modal-close-button" onClick={() => setIsEditing(false)}>✖</button>
+                            <h2 className="modal-title">Edit Address</h2>
+                            <form onSubmit={handleEditAddress}>
+                                <div className="form-group">
+                                    <label>Address Line</label>
+                                    <input
+                                        type="text"
+                                        value={streetName}
+                                        onChange={(e) => setStreetName(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>City</label>
+                                    <input
+                                        type="text"
+                                        value={city}
+                                        onChange={(e) => setCity(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>State</label>
+                                    <input
+                                        type="text"
+                                        value={state}
+                                        onChange={(e) => setState(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Postal Code</label>
+                                    <input
+                                        type="text"
+                                        value={postalCode}
+                                        onChange={(e) => setPostalCode(e.target.value)}
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Country</label>
+                                    <input
+                                        type="text"
+                                        value={country}
+                                        onChange={(e) => setCountry(e.target.value)}
+                                    />
+                                </div>
+                                <div className="modal-buttons">
+                                    <button type="submit" className="modal-save-button">Update Address</button>
+                                    <button type="button" className="modal-cancel-button" onClick={() => setIsEditing(false)}>Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 )
             }
             <ToastContainer />

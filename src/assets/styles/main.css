@@ -1,0 +1,46 @@
+/* main.css */
+
+/* Navbar Styling */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for effect */
+}
+
+.navbar-content {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.brand-name {
+    text-align: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #000;
+}
+
+.account-icon {
+    font-size: 24px;
+    color: #000;
+    cursor: pointer;
+}
+
+/* To prevent overlap with the navbar on pages */
+.content {
+    margin-top: 60px; /* Adjust based on the navbar height */
+}

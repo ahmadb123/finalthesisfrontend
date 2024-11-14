@@ -1,43 +1,165 @@
-.address-display {
-    width: 300px;
-    padding: 20px;
-    border: 1px solid #000;
-    border-radius: 5px;
-    margin-top: 20px;
-    position: relative;
-    font-size: 0.9em;
-}
-
-.address-display p {
-    margin: 5px 0;
-    font-size: 0.95em;
-}
-
-.address-display .actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.address-display .default-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #000;
-    color: #fff;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1em;
-    font-weight: bold;
+    z-index: 1000;
 }
 
-.address-display .default-label {
-    margin-top: 10px;
-    font-weight: bold;
-    color: #000;
-    text-align: right;
+/* Modal Container */
+.modal-container {
+    background: #fff;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 8px;
+    position: relative;
+    text-align: left;
 }
+
+/* Close Button */
+.modal-close-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+/* Title */
+.modal-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-save-button,
+.modal-cancel-button {
+    flex: 1;
+    padding: 12px;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.modal-save-button {
+    background: #000;
+    color: #fff;
+}
+
+.modal-cancel-button {
+    background: #fff;
+    color: #000;
+    border: 1px solid #000;
+}
+
+
+/* Styles for the Add Address box */
+.add-new-address {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #555;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 20px;
+    width: 150px;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+}
+
+.add-new-address:hover {
+    background-color: #e0e0e0;
+}
+
+.add-icon {
+    font-size: 1.5em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #555;
+    border-radius: 50%;
+    color: #555;
+}
+
+
+.edit-address{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -100px;
+}
+
+/* Styles for the Address Box */
+.address-display {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.address-display h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.address-display p {
+    font-size: 1em;
+    margin-bottom: 5px;
+}
+
+.address-display button {
+    padding: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    background: #000;
+    color: #fff;
+    margin: auto;
+}
+
+.address-display button:hover {
+    background: #333;
+}
+
+/* Styles for Default  */
+.default-label {
+    font-size: large;
+    font-size: 1em;
+    font-weight: bold;
+    color: black;
+}
+
