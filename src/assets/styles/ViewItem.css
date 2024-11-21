@@ -1,0 +1,73 @@
+.view-item-page {
+    display: flex;
+    gap: 2rem;
+    padding: 2rem;
+  }
+  
+  .item-image img {
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .item-details {
+    flex: 1;
+  }
+  
+  .item-details h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .item-rating {
+    color: gold;
+    font-size: 1rem;
+  }
+  
+  .item-price {
+    font-size: 1.5rem;
+    color: #333;
+    margin: 1rem 0;
+  }
+  
+  .item-description {
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    color: #555;
+  }
+  
+  .item-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+  
+  .item-actions select {
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .item-actions button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .item-actions button:hover {
+    background-color: #333;
+  }
+  
+  .buy-now {
+    background-color: #ff0000;
+  }
+  
+  .item-extra p {
+    margin: 0.5rem 0;
+  }
+  

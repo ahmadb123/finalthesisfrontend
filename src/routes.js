@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ViewItem from './pages/ViewItem';
 import LandingPage from "./pages/landingPage";
 import Account from "./pages/Account";
 import EditAccount from "./pages/EditAccount";
@@ -21,6 +21,7 @@ function AppRoutes() {
           <Route path="/account" element={<Account />} />
           <Route path="/editAccount" element={<EditAccount />} />
           <Route path="/cart-page" element={<CartPage />} />
+          <Route path="/view-item/:id" element={<ViewItem />} />
           {/* Add more routes as needed */}
         </Routes>
       </Router>

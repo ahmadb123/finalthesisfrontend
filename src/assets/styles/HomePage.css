@@ -1,3 +1,4 @@
+/* Navbar styling */
 .navbar {
   display: flex;
   justify-content: center;
@@ -36,80 +37,97 @@
   color: #000;
   cursor: pointer;
 }
+
+/* Container for items */
 .items-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
+  justify-content: center; /* Center align items */
 }
 
-.item-box {
-  border: 1px solid #ddd;
-  padding: 10px;
-  width: 200px;
-  text-align: center;
-  border-radius: 5px;
-  box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
-}
-
-.item-box h3 {
-  font-size: 1.2em;
-}
-
-.item-box p {
-  font-size: 1em;
-  margin: 5px 0;
-}
-
-.item-box button {
-  background-color: #007bff;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.item-box button:hover {
-  background-color: #0056b3;
-}
-
+/* Styling for each item box */
 .item-box {
   position: relative;
   border: 1px solid #ddd;
-  padding: 10px;
-  margin: 10px;
+  padding: 20px; /* Consistent padding */
+  width: 250px; /* Set a consistent width */
+  text-align: center;
   border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  margin: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Styling for image inside each item box */
+
+.item-image .item-img {
+  width: 100%;
+  height: auto; /* Fixed height to keep images uniform */
+  object-fit: cover; /* Ensures image fills the space proportionally */
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Animation effect when item box is active */
 .item-box.animate {
   transform: scale(1.1); /* Scale up the item box */
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); /* Highlight effect */
 }
 
+/* Title inside each item box */
+.item-box h3 {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+/* Description inside each item box */
+.item-box p {
+  font-size: 1em;
+  margin: 10px 0;
+}
+
+/* Button container inside item box */
+.item-box .button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  width: 100%; /* Ensures container takes full width of item-box */
+}
+
+/* Button styling */
 .item-box button {
   background-color: #007bff;
   color: white;
-  padding: 5px 10px;
+  padding: 8px 12px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  flex: 1; /* Allow buttons to take equal space */
+  margin: 0 5px; /* Small margin between buttons */
+  text-align: center;
 }
-
 .item-box button:hover {
   background-color: #0056b3;
 }
 
+/* Styling for description inside each item box */
+.items-container .item-desc {
+  height: 50px; /* Adjust this based on your needs */
+  overflow: hidden; /* Hide overflow if the text is too long */
+  margin: 10px 0;
+}
 
 
+
+/* Cart icon styling */
 .cart-icon {
   position: relative;
   cursor: pointer;
 }
 
+/* Cart preview styling */
 .cart-preview {
   position: absolute;
   top: 30px;

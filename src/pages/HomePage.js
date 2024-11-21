@@ -80,6 +80,28 @@ function HomePage() {
         console.error("Error adding item to cart:", e);
     }
   };
+  
+  const  removeItemFromCart = async (item) => {
+    try{
+      const response = await fetch(`${apiUrl}/api/cart/remove-item/${item.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + userId,
+        },
+      });
+      if(response.ok){
+        toast.success('Item removed from cart');
+        getCartData();
+      }else{
+        toast.error('Error removing item from cart');
+        console.error('Error removing item from cart');
+      }
+    }catch(e){
+      console.error('Error removing item from cart:', e);
+    }
+  };
+  
 
   useEffect(() => {
     getCurrentItems();
@@ -110,6 +132,7 @@ function HomePage() {
                                 <div key={index} className="cart-preview-item">
                                 <p>{item.name} x {item.quantity}</p>
                                 <p>${(item.price * item.quantity).toFixed(2)}</p>
+                                <button className='remove-item' onClick={() => removeItemFromCart(item)}>Remove</button>
                         </div>
                     ))}
                     <hr />
@@ -126,21 +149,29 @@ function HomePage() {
         </div>
       </div>
 
-      <div className="items-container">
-        {items.map(item => (
-          <div 
-            key={item.id} 
-            className={`item-box ${animatedItemId === item.id ? 'animate' : ''}`}
-          >
-            <h3>{item.name}</h3>
-            <p>{item.description}</p>
-            <p>${item.price}</p>
-            <button onClick={() => addToCart(item)}>Add to Cart</button>
+    <div className="items-container">
+      {items.map(item => (
+        <div 
+          key={item.id} 
+          className={`item-box ${animatedItemId === item.id ? 'animate' : ''}`}
+        >
+          <h3>{item.name}</h3>
+          <div className="item-image">
+            <img src={`${apiUrl}${item.image}`} alt={item.name} className="item-img" />
           </div>
-        ))}
-        <ToastContainer />
-      </div>
+          <div className="item-desc">
+            <p>{item.description}</p>
+          </div>
+          <p>${item.price}</p>
+          <div className="button-container">
+              <button onClick={() => addToCart(item)}>Add to Cart</button>
+              <button onClick={() => navigate(`/view-item/${item.id}`)}>View Item</button>
+              </div>
+        </div>
+      ))}
+      <ToastContainer />
     </div>
+  </div>
   );
 }
 
