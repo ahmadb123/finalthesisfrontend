@@ -66,8 +66,8 @@ function HomePage() {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + userId
             },
-            body: JSON.stringify(item),
-        });
+            body: JSON.stringify({ id: item.id }), // Send only the item ID
+          });
         if(response.ok){
             toast.success('Item added to cart');
             setAnimatedItemId(item.id); // Trigger animation for the item

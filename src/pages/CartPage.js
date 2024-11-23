@@ -1,20 +1,19 @@
-// src/pages/CartPage.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const apiUrl = 'http://localhost:8080';
+import "../assets/styles/CartPage.css";
+const apiUrl = "http://localhost:8080";
 
 function CartPage() {
   const navigate = useNavigate();
-  const userIdToken = localStorage.getItem('jwtToken'); // Get user ID token
+  const userIdToken = localStorage.getItem("jwtToken"); // Get user ID token
 
   // Redirect to homepage if not logged in
   useEffect(() => {
     if (!userIdToken) {
-      toast.error('Please login to view your cart');
-      navigate('/homePage');
+      toast.error("Please login to view your cart");
+      navigate("/homePage");
     }
   }, [userIdToken, navigate]);
 
@@ -29,21 +28,21 @@ function CartPage() {
     const getCurrentItems = async () => {
       try {
         const response = await fetch(`${apiUrl}/api/cart/get-cart`, {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + userIdToken
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + userIdToken,
           },
         });
         if (response.ok) {
           const data = await response.json();
           setUserId(data.userId);
-          setItems(data.items);       // Set items array
-          setCount(data.count);       // Set total item count
-          setTotal(data.total);       // Set total price
+          setItems(data.items); // Set items array
+          setCount(data.count); // Set total item count
+          setTotal(data.total); // Set total price
         } else {
-          toast.error('Error fetching cart items');
-          navigate('/homePage');
+          toast.error("Error fetching cart items");
+          navigate("/homePage");
         }
       } catch (e) {
         console.error("Error fetching cart items:", e);
@@ -56,18 +55,53 @@ function CartPage() {
   return (
     <div className="cart-page">
       <ToastContainer />
-      <h1>Cart for User: {userId}</h1>
-      <p>Total Items: {count}</p>
-      <p>Total Price: ${total.toFixed(2)}</p>
-      <div className="cart-items">
-        {items.map((item, index) => (
-          <div key={item._id || index} className="cart-item">
-            <h3>{item.name}</h3>
-            <p>Quantity: {item.quantity}</p>
-            <p>Price per Item: ${item.price.toFixed(2)}</p>
-            <p>Total for this Item: ${(item.price * item.quantity).toFixed(2)}</p>
+      <div className="cart-container">
+        {/* Left Column */}
+        <div className="cart-left">
+          <h3>Hello, {userId}</h3>
+          <h1>Your Bag</h1>
+          <p>
+            Total Items: <strong>{count}</strong>
+          </p>
+          <p>
+            Total Price: <strong>${total.toFixed(2)}</strong>
+          </p>
+          <div className="cart-items">
+            {items.map((item, index) => (
+              <div key={item._id || index} className="cart-item">
+              <img src={`${apiUrl}${item.image}`} alt={item.name} className="item-img" />
+              <div className="cart-item-details">
+                  <h3>{item.name}</h3>
+                  <p>Quantity: {item.quantity}</p>
+                  <p>Price per Item: ${item.price.toFixed(2)}</p>
+                  <p>Total: ${(item.price * item.quantity).toFixed(2)}</p>
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {/* Right Column */}
+        <div className="cart-right">
+          <h3>Order Summary</h3>
+          <p>Items: {count}</p>
+          <p>Subtotal: ${total.toFixed(2)}</p>
+          <p>Delivery: $4.99</p>
+          <h4>
+            Total: <strong>${(total + 4.99).toFixed(2)}</strong>
+          </h4>
+          <button className="checkout-btn">Checkout</button>
+          <button className="google-pay-btn">Google Pay</button>
+          <div className="promo-code">
+            <input type="text" placeholder="Enter promo code" />
+            <button>Apply</button>
+          </div>
+          <div className="payment-methods">
+            <img src="visa.png" alt="Visa" />
+            <img src="mastercard.png" alt="Mastercard" />
+            <img src="paypal.png" alt="PayPal" />
+          </div>
+        </div>
       </div>
     </div>
   );
