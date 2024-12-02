@@ -1,6 +1,6 @@
 // src/pages/HomePage.js
 import React, { useEffect, useState } from 'react';
-import { FaUserCircle, FaShoppingCart } from 'react-icons/fa';
+import { FaUserCircle, FaShoppingCart, FaSearch , FaTimes} from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import "../assets/styles/HomePage.css";
 import { toast, ToastContainer } from "react-toastify";
@@ -14,8 +14,72 @@ function HomePage() {
   const [cart, setCart] = useState({ items: [], total: 0, count: 0 });
   const [animatedItemId, setAnimatedItemId] = useState(null); // State to track animated item
   const [showCart , setShowCart] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [recentSearch, setRecentSearch] = useState('');
+  const [filteredItems, setFilteredItems] = useState([]); // State for filtered items
+  const [searchSuggestions, setSearchSuggestions] = useState({
+    recent: [],
+    popular: ['crossbody', 'wallet', 'backpack', 'boots'],
+    suggested: [],
+  });
   const userId = localStorage.getItem('jwtToken');
 
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
+    if(showSearch){
+      setRecentSearch('');
+    }
+  };
+
+  
+  const handleSearch = (event) => {
+    const searchInput = event.target.value;
+    setRecentSearch(searchInput);
+
+    if (event.key === "Enter") {
+      onSearch(searchInput);
+    }
+
+    // Dynamically update suggestions based on the input
+    setSearchSuggestions((prev) => ({
+      ...prev,
+      suggested: items
+        .filter((item) =>
+          item.name.toLowerCase().includes(searchInput.toLowerCase())
+        )
+        .slice(0, 5),
+    }));
+  };
+
+
+  const onSearch = (searchInput) => {
+    setRecentSearch(searchInput);
+    // Save the search in recent searches
+    setSearchSuggestions((prev) => {
+      const updatedRecent = [
+        searchInput,
+        ...prev.recent.filter((item) => item !== searchInput),
+      ].slice(0, 5);
+      // Save to localStorage
+      localStorage.setItem('recentSearches', JSON.stringify(updatedRecent));
+      return {
+        ...prev,
+        recent: updatedRecent,
+      };
+    });
+    /* 
+    TODO: 
+    Render the page to show the desired item when search button
+    */ 
+    // Filter items
+    const filtered = items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchInput.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchInput.toLowerCase())
+    );
+    setFilteredItems(filtered);
+  };
+  
   const getCurrentItems = async () => {
     try {
         const response = await fetch(`${apiUrl}/api/items`, { 
@@ -27,7 +91,12 @@ function HomePage() {
         if(response.ok){
             const data = await response.json();
             setItems(data);
-        } else {
+            setFilteredItems(data);
+            setSearchSuggestions((prev) => ({
+              ...prev,
+              suggested: data.slice(0,5),
+            }));
+          } else {
             console.error('Error fetching items');
             navigate('/login');
         }
@@ -106,6 +175,13 @@ function HomePage() {
   useEffect(() => {
     getCurrentItems();
     getCartData();
+
+    // Load recent searches from localStorage
+    const storedRecentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+    setSearchSuggestions((prev) => ({
+      ...prev,
+      recent: storedRecentSearches,
+    }));
   }, []);
 
   return (
@@ -114,6 +190,52 @@ function HomePage() {
         <div className="navbar-content">
           <span className="brand-name">Tezkar</span>
           <div className="icons">
+          <div className="search-icon" onClick={toggleSearch}>
+        {showSearch ? <FaTimes /> : <FaSearch />}
+      </div>
+      {showSearch && (
+            <div className="search-container">
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search..."
+                value={recentSearch}
+                onChange={(e) => handleSearch(e)}
+                onKeyDown={(e) => handleSearch(e)}
+              />
+              <div className="search-suggestions">
+                <h4>Suggestions:</h4>
+                {searchSuggestions.suggested.length > 0 ? (
+                  <ul>
+                    {searchSuggestions.suggested.map((item, index) => (
+                      <li
+                        key={index}
+                        onClick={() => onSearch(item.name)}
+                        className="suggestion-item"
+                      >
+                        {item.name}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No suggestions available</p>
+                )}
+                <h4>Recent Searches:</h4>
+                <ul>
+                  {searchSuggestions.recent.map((recent, index) => (
+                    <li
+                      key={index}
+                      onClick={() => onSearch(recent)}
+                      className="recent-item"
+                    >
+                      {recent}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+
             <div className="account-icon" onClick={() => navigate('/account')}>
               <FaUserCircle />
             </div>

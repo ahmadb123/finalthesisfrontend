@@ -90,17 +90,7 @@ function CartPage() {
           <h4>
             Total: <strong>${(total + 4.99).toFixed(2)}</strong>
           </h4>
-          <button className="checkout-btn">Checkout</button>
-          <button className="google-pay-btn">Google Pay</button>
-          <div className="promo-code">
-            <input type="text" placeholder="Enter promo code" />
-            <button>Apply</button>
-          </div>
-          <div className="payment-methods">
-            <img src="visa.png" alt="Visa" />
-            <img src="mastercard.png" alt="Mastercard" />
-            <img src="paypal.png" alt="PayPal" />
-          </div>
+          <button onClick={() => navigate("/checkout")}>Proceed to Checkout</button>
         </div>
       </div>
     </div>
