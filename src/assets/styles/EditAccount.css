@@ -71,7 +71,6 @@
     border: 1px solid #000;
 }
 
-
 /* Styles for the Add Address box */
 .add-new-address {
     cursor: pointer;
@@ -107,18 +106,16 @@
     color: #555;
 }
 
-
-.edit-address{
+/* Updated Edit Address */
+.edit-address {
     position: fixed;
     top: 50%;
     left: 50%;
-    margin-top: -50px;
-    margin-left: -100px;
+    transform: translate(-50%, -50%);
 }
 
 /* Styles for the Address Box */
 .address-display {
-    
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -156,11 +153,10 @@
     background: #333;
 }
 
-/* Styles for Default  */
+/* Styles for Default */
 .default-label {
     font-size: large;
     font-size: 1em;
     font-weight: bold;
     color: black;
 }
-

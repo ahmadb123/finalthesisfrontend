@@ -27,6 +27,11 @@ function RegisterPage() {
     const [country, setCountry] = useState("");
     const [postalCode, setPostalCode] = useState("");
     const [state, setState] = useState("");
+
+    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [gender, setGender] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
@@ -63,6 +68,9 @@ function RegisterPage() {
                     emailAddress,
                     firstName,
                     lastName,
+                    dateOfBirth: dateOfBirth || null,
+                    gender: gender || null,
+                    phoneNumber: phoneNumber || null,
                     address: {
                         city,
                         country,
@@ -97,6 +105,7 @@ function RegisterPage() {
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
+
                 <div className="form-group">
                     <label>Password</label>
                     <input
@@ -111,6 +120,7 @@ function RegisterPage() {
                     <input type="checkbox" onClick={togglePassword} />
                     <label>Show Password</label>
                 </div>
+
                 <div className="form-group">
                     <label>Email Address</label>
                     <input
@@ -120,6 +130,7 @@ function RegisterPage() {
                         onChange={(e) => setEmailAddress(e.target.value)}
                     />
                 </div>
+
                 <div className="form-group">
                     <label>First Name</label>
                     <input
@@ -129,6 +140,7 @@ function RegisterPage() {
                         onChange={(e) => setFirstName(e.target.value)}
                     />
                 </div>
+
                 <div className="form-group">
                     <label>Last Name</label>
                     <input
@@ -138,6 +150,40 @@ function RegisterPage() {
                         onChange={(e) => setLastName(e.target.value)}
                     />
                 </div>
+
+                {/* New fields for phone number, gender, and date of birth */}
+                <div className="form-group">
+                    <label>Phone Number</label>
+                    <input
+                        type="text"
+                        placeholder="Phone Number (e.g. +1 1234567890)"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label>Gender</label>
+                    <select
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                    >
+                        <option value="">Select Gender</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+
+                <div className="form-group">
+                    <label>Date of Birth</label>
+                    <input
+                        type="date"
+                        value={dateOfBirth}
+                        onChange={(e) => setDateOfBirth(e.target.value)}
+                    />
+                </div>
+
                 <button type="submit" className="submit-button">
                     Register
                 </button>

@@ -1,10 +1,13 @@
 // src/pages/HomePage.js
 import React, { useEffect, useState } from 'react';
-import { FaUserCircle, FaShoppingCart, FaSearch , FaTimes} from 'react-icons/fa';
+import { FaUserCircle, FaShoppingCart, FaSearch , FaTimes, FaHeart} from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import "../assets/styles/HomePage.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumb from '../components/Breadcrumb';
+import { addToCart } from '../utils/addToCart';
+
 
 const apiUrl = 'http://localhost:8080';
 
@@ -17,11 +20,16 @@ function HomePage() {
   const [showSearch, setShowSearch] = useState(false);
   const [recentSearch, setRecentSearch] = useState('');
   const [filteredItems, setFilteredItems] = useState([]); // State for filtered items
+  const [showAccountDropdown, setShowAccountDropdown] = useState(false);
+  const role = localStorage.getItem('userRole') || 'guest';
+  const username = localStorage.getItem('username') || 'Guest'; // Default to "Guest" if no username is found
+
   const [searchSuggestions, setSearchSuggestions] = useState({
     recent: [],
     popular: ['crossbody', 'wallet', 'backpack', 'boots'],
     suggested: [],
   });
+  const isGuest = localStorage.getItem('userRole') === 'guest';
   const userId = localStorage.getItem('jwtToken');
 
   const toggleSearch = () => {
@@ -30,6 +38,36 @@ function HomePage() {
       setRecentSearch('');
     }
   };
+
+  const handleAccountClick = () => setShowAccountDropdown(!showAccountDropdown);
+
+
+const increaseQuantity = async (item) => {
+  const updatedCart = cart.items.map((cartItem) => {
+    if(cartItem.id === item.id){
+      return { ...cartItem, quantity: cartItem.quantity + 1};
+    }
+    return cartItem;
+  });
+  setCart({ ...cart, items: updatedCart });
+};
+
+const decreaseQuantity = (item) => {
+  const updatedCart = cart.items.map(cartItem => {
+      if (cartItem.id === item.id && cartItem.quantity >= 0) {
+        if(cartItem.quantity === 0){
+          // delete from cart automatically
+          removeItemFromCart()
+        }else{
+          // decrease 
+          return { ...cartItem, quantity: cartItem.quantity - 1 };
+        }
+      }
+      return cartItem;
+  });
+  setCart({ ...cart, items: updatedCart });
+};
+
 
   
   const handleSearch = (event) => {
@@ -126,31 +164,7 @@ function HomePage() {
         } 
     };
 
-  // Function to handle "Add to Cart"
-  const addToCart = async (item) => {
-    try {
-        const response = await fetch(`${apiUrl}/api/cart/add-item`, { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + userId
-            },
-            body: JSON.stringify({ id: item.id }), // Send only the item ID
-          });
-        if(response.ok){
-            toast.success('Item added to cart');
-            setAnimatedItemId(item.id); // Trigger animation for the item
-            setTimeout(() => setAnimatedItemId(null), 1000); // Clear animation state after 1 second
-        } else {
-            toast.error('Error adding item to cart');
-            console.error('Error adding item to cart');
-        }
-    } catch (e) {
-        console.error("Error adding item to cart:", e);
-    }
-  };
-  
-  const  removeItemFromCart = async (item) => {
+  const removeItemFromCart = async (item) => {
     try{
       const response = await fetch(`${apiUrl}/api/cart/remove-item/${item.id}`, {
         method: 'DELETE',
@@ -171,6 +185,22 @@ function HomePage() {
     }
   };
   
+  const handleCheckout = async () => {
+    const role = localStorage.getItem("userRole");
+    if(role === 'guest'){
+      toast.error('Please login to checkout');
+      navigate('/login', { state: { redirectTo: '/cart-page' } });
+    }else{
+      navigate('/cart-page');
+    }
+  }
+
+  const handleAddToCart = async (item) => {
+    await addToCart(item.id, userId);
+    setAnimatedItemId(item.id); // Trigger animation for the item
+    setTimeout(() => setAnimatedItemId(null), 1000); // Clear animation after 1 second
+    toast.success('Item added to cart');
+  };
 
   useEffect(() => {
     getCurrentItems();
@@ -236,8 +266,26 @@ function HomePage() {
             </div>
           )}
 
-            <div className="account-icon" onClick={() => navigate('/account')}>
-              <FaUserCircle />
+            <div className='account-icon' onClick={handleAccountClick}
+              onMouseEnter={() => setShowAccountDropdown(true)}
+              onMouseLeave={() => setShowAccountDropdown(false)}
+            >
+            <FaUserCircle />
+            {showAccountDropdown && (
+              <div className='account-dropdown'>
+                <p>Hello, {username}</p>
+                <small>{role}</small>
+                <small onClick={() => navigate(`/account`)}> Account</small>
+                <ul>
+                <li onClick={() => navigate('/track-order')}>Track Order</li>
+                <li onClick={() => navigate('/order-status')}>Order Status</li>
+                </ul>
+                </div>
+                )}
+            </div>
+
+            <div className='favorites-icon' onClick={() => navigate('/favorites')}>
+              <FaHeart />
             </div>
             <div 
                className="cart-icon" 
@@ -254,12 +302,17 @@ function HomePage() {
                                 <div key={index} className="cart-preview-item">
                                 <p>{item.name} x {item.quantity}</p>
                                 <p>${(item.price * item.quantity).toFixed(2)}</p>
+                                <div className='quantity-adjustment'>
+                                  <button onClick={() => decreaseQuantity(item)}>-</button>
+                                  <span>{item.quantity}</span>
+                                  <button onClick={() => increaseQuantity(item)}>+</button>
+                                </div>
                                 <button className='remove-item' onClick={() => removeItemFromCart(item)}>Remove</button>
                         </div>
                     ))}
                     <hr />
                     <p>Total: ${cart.total.toFixed(2)}</p>
-                    <button onClick={() => navigate('/cart-page')}>View Cart</button>
+                    <button onClick={handleCheckout} >View Cart</button>
                     </div>
                     ) : (
                         <p>Your cart is empty</p>
@@ -286,11 +339,12 @@ function HomePage() {
           </div>
           <p>${item.price}</p>
           <div className="button-container">
-              <button onClick={() => addToCart(item)}>Add to Cart</button>
+              <button onClick={() => handleAddToCart(item)}>Add to Cart</button>
               <button onClick={() => navigate(`/view-item/${item.id}`)}>View Item</button>
               </div>
         </div>
       ))}
+      {isGuest && <p className='logged-in-guest'> You are browsing as guest. Register for a full experience! </p>}
       <ToastContainer />
     </div>
   </div>

@@ -8,33 +8,20 @@ const apiURL = "http://localhost:8080";
 
 
 function Account() {
-    
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const role = localStorage.getItem('userRole') || 'guest';
+    const username = localStorage.getItem('username') || 'Guest';
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const navigate = useNavigate();
     useEffect(() => { 
+        handleValidation();
     }, []);
     const handleValidation = async (e) => {
-        e.preventDefault();
-        try{
-            const response = await fetch(`${apiURL}/api/auth/login`,{
-                method: "POST",
-                headers: {"Content-type": "application/json"},
-                body: JSON.stringify({username, password}),
-            });
-            if(response.ok){
-                setIsAuthenticated(true);
-            }else if(response.status === 401){
-                setIsAuthenticated(false);
-                toast.error("Incorrect Password/Username. Please try again.");
-            }else{
-                const textError = await response.text();
-                toast.error(`Login failed: ${textError}`);
-            }
-        }catch(e){
-            console.error("Error", e);
-            toast.error("Error occurred logging in");
+        if(role !== 'user'){
+            toast.error("Please login to access your account");
+            setIsAuthenticated(false);
+            return;
+        }else{
+            setIsAuthenticated(true);
         }
     }
 
@@ -42,29 +29,8 @@ function Account() {
         <div className="wrapper"> {/* Centering wrapper */}
             <div className="account-page">
                 <h1>Your account</h1>
-                {!isAuthenticated ? (
-                    // Show login form if not authenticated
-                    <form onSubmit={handleValidation} className="login-form">
-                        <label>
-                            Email:
-                            <input
-                                type="text"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                        </label>
-                        <label>
-                            Password:
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </label>
-                        <button type="submit">Login</button>
-                    </form>
-                ) : (
-                    <>
+                <p>Welcome, {username}</p>
+                {isAuthenticated && (
                         <div className="account-options">
                         <div className="account-option" onClick={() => navigate("/login-security")}>
                                 <h2>Login & Security</h2>
@@ -80,8 +46,8 @@ function Account() {
                                 <p>Track, return, cancel an order, download invoice or buy again</p>
                             </div>
                         </div>
-                    </>
-                )}
+                                        )}
+                <ToastContainer />
             </div>
         </div>
     );

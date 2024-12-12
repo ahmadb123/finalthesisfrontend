@@ -1,19 +1,16 @@
 .breadcrumb {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  font-size: 0.9rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0; /* Keeps it at the top of the viewport */
+  left: 0;
+  width: 100%;
+  z-index: 500; /* Ensure it stays above other elements */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.breadcrumb a {
-    text-decoration: none;
-    color: #007bff;
-}
 
-.breadcrumb a:hover {
-    text-decoration: underline;
-}
-
-.breadcrumb span {
-    margin: 0 5px;
-    color: #6c757d;
-}

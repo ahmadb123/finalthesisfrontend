@@ -133,7 +133,6 @@ function EditAddress(){
 
     return (
         <div className="edit-address">
-            <Breadcrumb />
             <h2>ADDRESS BOOK</h2>
             {
                 !isEditing ? (
