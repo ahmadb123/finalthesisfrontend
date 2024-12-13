@@ -64,8 +64,6 @@ function LoginSecurity() {
                     <li onClick={() => navigate("/login-security")}>Personal Information</li>
                     <li onClick={() => navigate("/edit-address")}>Address Book</li>
                     <li onClick={() => navigate("/preferences")}>Preferences</li>
-                    <li onClick={() => navigate("/size-profile")}>Size Profile</li>
-                    <li onClick={() => navigate("/adiclub-pass")}>adiClub Pass</li>
                     <li onClick={() => navigate("/logout")}>Log Out</li>
                 </ul>
             </div>
